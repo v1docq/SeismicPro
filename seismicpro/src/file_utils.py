@@ -1,4 +1,5 @@
 """ Utility functions for files """
+import re
 import segyio
 import numpy as np
 import pandas as pd
@@ -99,3 +100,31 @@ def merge_picking_files(output_path, **kwargs):
 
     df = pd.concat(dfs, ignore_index=True)
     df.to_csv(output_path, index=False)
+
+def load_horizon(horizon):
+    """Load horizons from file. This file should contain columns with inline, crossline
+    and horizon's time for current inline and crossline.
+    Columns order:   |  INLINE  |   CROSSLINE   | ...another columns... | horizon time  |
+    Note: that file shouldn't contain columns' name!
+
+    Parameters
+    ----------
+    horizon : str
+        path to horizon
+
+    Returns
+    -------
+        : pd.DataFrame with 3 columns: INLINE_3D, CROSSLINE_3D, time.
+    """
+    horizon_val = []
+    with open(horizon) as f:
+        text = f.read()
+        lines = text.split('\n')
+        for line in lines:
+            line = re.sub(' +', ' ', line.strip())
+            if line == '':
+                continue
+            line = line.split(' ')
+            horizon_val.append([int(line[0]), int(line[1]), float(line[-1])])
+        f.close()
+    return pd.DataFrame(horizon_val, columns=['INLINE_3D', 'CROSSLINE_3D', 'time'])

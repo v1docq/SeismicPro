@@ -530,3 +530,29 @@ def show_2d_heatmap(idf, figsize=None, save_to=None, dpi=300, **kwargs):
     if save_to is not None:
         plt.savefig(save_to, dpi=dpi)
     plt.show()
+
+def avo_plot(data, figsize, amp_size, rms_size, title, class_size, **kwargs):
+    """Plot AVO distribution. """
+    data = data.T
+    nan_data = data.copy()
+    nan_data[nan_data == 0] = np.nan
+    rms = np.nanmean(nan_data**2, axis=1)**.5
+    rms = np.nan_to_num(rms, 0)
+
+    nonzeros = np.nonzero(rms)[0]
+    if isinstance(class_size, int):
+        class_size = np.arange(0, rms.shape[0]*class_size, class_size)
+        class_size = class_size[nonzeros[0]: nonzeros[-1]+1]
+    rms = rms[nonzeros[0]: nonzeros[-1]+1]
+    data = data[nonzeros[0]: nonzeros[-1]+1]
+
+    plt.figure(figsize=figsize)
+    plt.ylabel('Amplitude')
+    plt.xlabel('Offset')
+    plt.title(title)
+    plt.grid()
+    for i, (avg, r) in enumerate(zip(data, rms)):
+        plt.scatter(np.zeros(avg.shape)+class_size[i], avg,
+                    color='C0', marker='o', s=amp_size, **kwargs)
+        plt.scatter([class_size[i]], r, color='r', marker='v', s=rms_size)
+    plt.show()

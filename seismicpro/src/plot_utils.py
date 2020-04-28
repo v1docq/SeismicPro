@@ -532,7 +532,29 @@ def show_2d_heatmap(idf, figsize=None, save_to=None, dpi=300, **kwargs):
     plt.show()
 
 def avo_plot(data, figsize, amp_size, rms_size, title, class_size, **kwargs):
-    """Plot AVO distribution. """
+    """Plot AVO distribution.
+
+    Parameters
+    data : array
+        Resulted AVO distribution for full dataset.
+    figsize : tuple
+        Output figure size.
+    amp_size : int
+        Size of amplitude's dots on plot.
+    rms_size : int
+        Size of RMS triangle on plot.
+    title : str
+        Plot title.
+    class_size : int or array-like
+            Lenght of one class or lenght of each class if iterable.
+    kwargs : dict
+        Named argumets for ```matplotlib.pyplot.scatter```.
+
+    Returns
+    -------
+    Plot with columns of rms amplitude values and triangle of
+    rms amplitude of current column.
+    """
     data = data.T
     nan_data = data.copy()
     nan_data[nan_data == 0] = np.nan

@@ -166,8 +166,7 @@ class SeismicDataset(Dataset):
             constract AVO distribution in the following order [from ms, to ms].
             Else, path to horizon.
         field_type : 'same' or 'diff', optional, default: 'same'
-            If all seismograms have the same lenght and same
-            offset use 'same', otherwise use 'diff'.
+            If all seismograms have the same lenght and same offset use 'same', otherwise use 'diff'.
         field_ratio : int, default 10
             Used only with `field_type` 'diff'. Should be bigger
             then ratio between longest and shortest seismograms.
@@ -238,7 +237,7 @@ class SeismicDataset(Dataset):
         setattr(self, container_name, params)
 
     def _update_avo_params(self, params, batch, component, class_size, storage_size, window, horizon_width, horizon):
-        """One step of avo."""
+        """One step of AVO. """
         for idx in batch.indices:
             pos = batch.get_pos(None, component, idx)
             field = getattr(batch, component)[pos]
